@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="styles.css">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <title>Me</title>
+    </head>
+    <body>
+        <script>document.body.classList.add('fade');</script>
+        <div class="grid grid-rows-5 h-screen place-items-center">
+            <p class="row-start-1 font-mono font-bold text-2xl subpixel-antialiased tracking-wide">
+                David James McCleave
+            </p>
+            <!-- ABOUT ME -->
+            <div class="row-start-2">
+                <button class="transition duration-150 ease-in-out">About Me</button>
+            </div>
+            <!-- EDUCATION -->
+            <div class="row-start-3">
+                <button class="transition duration-150 ease-in-out">Education</button>
+            </div>
+            <!-- PROJECTS -->
+            <div class="row-start-4">
+                <button class="transition duration-150 ease-in-out">Projects</button>
+            </div>
+            <!-- CONTACT -->
+            <div class="row-start-5">
+                <button class="transition duration-150 ease-in-out">Contact</button>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                window.setTimeout(function() {
+                    document.body.classList.remove('fade');
+                }, 230);
+            });
+        </script>
+    </body>
+</html>
