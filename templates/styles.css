@@ -1,9 +1,19 @@
-body {
-    opacity: 1;
-    transition-duration: 0.7s;
-    transition-property: opacity;
+html {
+    background-color: #171717;
+    font-size: 24px;
 }
 
-body.fade {
-    opacity: 0;
+.canvas {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.about-me {
+    position: relative;
+    z-index: -2;
 }
