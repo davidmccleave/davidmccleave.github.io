@@ -4,6 +4,7 @@ html {
 }
 
 .canvas {
+    background-color: #171717;
     position: fixed;
     top: 0;
     right: 0;
@@ -11,9 +12,4 @@ html {
     height: 100vh;
     z-index: -1;
     pointer-events: none;
-}
-
-.about-me {
-    position: relative;
-    z-index: -2;
 }
