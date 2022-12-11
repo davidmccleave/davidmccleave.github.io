@@ -1,0 +1,15 @@
+html {
+    background-color: #171717;
+    font-size: 24px;
+}
+
+.canvas {
+    background-color: #171717;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: none;
+}
