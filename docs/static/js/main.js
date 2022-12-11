@@ -28,11 +28,11 @@ function onWindowResize() {
 }
 
 // add lights
-var light = new THREE.PointLight(0xFFFFFF);
-light.position.set(0, 0, 20);
-var lightAmb = new THREE.AmbientLight(0x777777);
-scene.add(light);
-scene.add(lightAmb);
+// var light = new THREE.PointLight(0xFFFFFF);
+// light.position.set(-50, 50, 0);
+// scene.add(light);
+const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+scene.add( directionalLight );
 
 // add grid
 // var grid = new THREE.GridHelper(100, 1);
@@ -40,7 +40,7 @@ scene.add(lightAmb);
 
 // add line
 const lineMaterial = new THREE.LineBasicMaterial({
-    color : 0x404040
+    color : 0x737373
 });
 const points = [];
 const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
