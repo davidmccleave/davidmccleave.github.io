@@ -4,7 +4,7 @@ const canvas = document.querySelector('.canvas');
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 scene.add(camera);
-camera.position.set(0, 0, 5);
+camera.position.set(0, 20, 30);
 camera.lookAt(scene.position);
 
 // set up renderer
@@ -30,22 +30,72 @@ function onWindowResize() {
 // add lights
 var light = new THREE.PointLight(0xFFFFFF);
 light.position.set(20, 0, 20);
-// var lightAmb = new THREE.AmbientLight(0x777777);
+var lightAmb = new THREE.AmbientLight(0x777777);
 scene.add(light);
-// scene.add(lightAmb);
+scene.add(lightAmb);
+
+// add grid
+// var grid = new THREE.GridHelper(100, 1);
+// scene.add(grid);
 
 // Create a circle around the mouse and move it. The sphere has opacity 0.
 var mouse = {x : 0, y: 0};
-var mouseGeometry = new THREE.SphereGeometry(1, 0, 0);
-var mouseMaterial = new THREE.MeshBasicMaterial({
-    color: 0x0000ff
-});
-var mouseMesh = new THREE.Mesh(mouseGeometry, mouseMaterial);
-mouseMesh.position.z = -5;
-scene.add(mouseMesh);
 
-// When the mouse moves, call the given function
+class Particle {
+    constructor() {
+        var mouseGeometry = new THREE.SphereGeometry(1, 16, 16);
+        var mouseMaterial = new THREE.MeshBasicMaterial({
+            color: getRandomColour()
+        });
+        this.mouseMesh = new THREE.Mesh(mouseGeometry, mouseMaterial);
+        this.mouseMesh.position.z = -5;
+        this.velocity = new THREE.Vector3();
+        this.velocity.random();
+        this.w = getRandomFloat(0.95, 0.99);
+        this.c1 = 0.005;
+        this.c2 = 0.015;
+
+        this.frameCount = 0;
+        this.frameMax = getRandomInt(300, 1500);
+        this.pBest = this.newPBest();
+
+        scene.add(this.mouseMesh);
+    }
+
+    updatePosition(mousePos) {
+        var currPos = new THREE.Vector3(this.mouseMesh.position.x, this.mouseMesh.position.y, this.mouseMesh.position.z);
+        this.updateVelocity(mousePos)
+        this.mouseMesh.position.x = currPos.x + this.velocity.x;
+        this.mouseMesh.position.y = currPos.y + this.velocity.y;
+        this.mouseMesh.position.z = currPos.z + this.velocity.z;
+
+        this.frameCount += 1;
+        if (this.frameCount > this.frameMax) {
+            this.frameCount = 0;
+            this.frameMax = getRandomInt(300, 1500);
+            this.pBest = this.newPBest();
+        }
+    }
+
+    updateVelocity(mousePos) {
+        var currPos = new THREE.Vector3(this.mouseMesh.position.x, this.mouseMesh.position.y, this.mouseMesh.position.z);
+        // let r1 = getRandomFloat(0, 1);
+        // let r2 = getRandomFloat(0, 1);
+        this.velocity.x = this.w * this.velocity.x + 0.01 * (this.c1 * (this.pBest.x - currPos.x) + this.c2 * (mousePos.x - currPos.x));
+        this.velocity.y = this.w * this.velocity.y + 0.01 * (this.c1 * (this.pBest.y - currPos.y) + this.c2 * (mousePos.y - currPos.y));
+        this.velocity.z = this.w * this.velocity.z + 0.01 * (this.c1 * (this.pBest.z - currPos.z) + this.c2 * (mousePos.z - currPos.z));
+    }
+
+    newPBest() { return new THREE.Vector3(getRandomFloat(-80, 80), getRandomFloat(-50, 50), getRandomFloat(-50, 30)); }
+}
+
+let particles = [];
+for (let i = 0; i < 20; i++) {
+    particles.push(new Particle())
+}
+
 document.addEventListener('mousemove', onMouseMove, false);
+var mouse3DPos = new THREE.Vector3();
 
 // Follows the mouse event
 function onMouseMove(event) {
@@ -61,13 +111,21 @@ function onMouseMove(event) {
 	var dir = vector.sub( camera.position ).normalize();
 	var distance = - camera.position.z / dir.z;
 
+    // Get mouse position
 	var pos = camera.position.clone().add( dir.multiplyScalar( distance ) );
-	mouseMesh.position.copy(pos);
+    mouse3DPos.copy(pos)
 };
+
+function updateParticles() {
+    for (const particle of particles) {
+        particle.updatePosition(mouse3DPos)
+    }
+}
 
 function animate() {
     requestAnimationFrame(animate)
-    // playScrollAnimations()
+    updateParticles()
+    playScrollAnimations()
     render()
 }
 
@@ -77,70 +135,66 @@ function render() {
     renderer.render(scene, camera)
 }
 
+function getRandomFloat(min, max) {
+    return (Math.random() * (max - min) + min);
+}
+
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function getRandomColour() {
+    // tailwind - cyan, green
+    const colours = [0xa5f3fc, 0x67e8f9, 0x22d3ee, 0x06b6d4, 0x0891b2, 0x0e7490, 0x4ade80, 0x22c55e, 0x16a34a, 0x15803d, 0x14b8a6];
+    return colours[getRandomInt(0, colours.length)];
+}
+
+const animationScripts = [];
+
+/* Liner Interpolation */
+function lerp(x, y, a) {
+    return (1 - a) * x + a * y
+}
+
+// Used to fit the lerps to start and end at specific scrolling percentages
+function scalePercent(start, end) {
+    return (scrollPercent - start) / (end - start)
+}
+
+//add an animation that moves the camera between 20-40 percent of scroll
+animationScripts.push({
+    start: 0,
+    end: 101,
+    func: () => {
+        camera.position.z = lerp(30, -5, scalePercent(0, 100))
+    },
+})
+
+function playScrollAnimations() {
+    animationScripts.forEach((a) => {
+        if (scrollPercent >= a.start && scrollPercent < a.end) {
+            a.func()
+        }
+    })
+}
+
+let scrollPercent = 0
+
+document.body.onscroll = () => {
+    //calculate the current scroll progress as a percentage
+    scrollPercent =
+        ((document.documentElement.scrollTop || document.body.scrollTop) /
+            ((document.documentElement.scrollHeight ||
+                document.body.scrollHeight) - document.documentElement.clientHeight)) * 100;
+}
+
 window.scrollTo({ top: 0, behavior: 'smooth' })
 animate()
 
-/* Liner Interpolation */
-// function lerp(x, y, a) {
-//     return (1 - a) * x + a * y
-// }
-
-// Used to fit the lerps to start and end at specific scrolling percentages
-// function scalePercent(start, end) {
-//     return (scrollPercent - start) / (end - start)
-// }
-
-// const animationScripts = [];
-
-//add an animation that moves the cube through first 40 percent of scroll
-// animationScripts.push({
-//     start: 0,
-//     end: 40,
-//     func: () => {
-//         camera.lookAt(cube.position)
-//         camera.position.set(0, 1, 2)
-//         cube.position.z = lerp(-10, 0, scalePercent(0, 40))
-//         //console.log(cube.position.z)
-//     },
-// })
-
-//add an animation that moves the camera between 20-40 percent of scroll
-// animationScripts.push({
-//     start: 40,
-//     end: 80,
-//     func: () => {
-//         camera.position.x = lerp(0, 5, scalePercent(60, 80))
-//         camera.position.y = lerp(1, 5, scalePercent(60, 80))
-//         camera.lookAt(cube.position)
-//         //console.log(camera.position.x + " " + camera.position.y)
-//     },
-// })
-
-// function playScrollAnimations() {
-//     animationScripts.forEach((a) => {
-//         if (scrollPercent >= a.start && scrollPercent < a.end) {
-//             a.func()
-//         }
-//     })
-// }
-
-// let scrollPercent = 0
-
-// document.body.onscroll = () => {
-//     //calculate the current scroll progress as a percentage
-//     scrollPercent =
-//         ((document.documentElement.scrollTop || document.body.scrollTop) /
-//             ((document.documentElement.scrollHeight ||
-//                 document.body.scrollHeight) - document.documentElement.clientHeight)) * 100;
-// }
-
-// function rotateCube() {
-//     cube.rotation.x += 0.01
-//     cube.rotation.y += 0.01
-// }
 
 // -----------------------------------------------------------------------------
-
 
 
 
