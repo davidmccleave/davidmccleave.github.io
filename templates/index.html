@@ -18,13 +18,15 @@
             <div class="subpixel-antialiased font-sans p-24 pt-12">
                 <div class="space-y-10 h-screen items-start">
 
-                    <div class="grid grid-rows-2 font-sans font-bold text-orange-100 text-6xl">
-                        <h1 class="row-start-1">David</h1>
-                        <h1 class="row-start-2">McCleave</h1>
+                    <div class="flex">
+                        <div class="grid grid-rows-2 font-sans font-bold text-orange-200 text-6xl">
+                            <h1 class="row-start-1">David</h1>
+                            <h1 class="row-start-2">McCleave</h1>
+                        </div>
                     </div>
                     <div class="h-1/3"></div>
                     <!-- Introduction -->
-                    <div class="text-4xl text-neutral-400 about-me">
+                    <div class="text-4xl text-neutral-300 about-me">
                         <div>
                             <span>I code things inspired</span>
                         </div>
@@ -32,62 +34,125 @@
                             <span>by biological processes.</span>
                         </div>
                     </div>
-                    <div class="grid grid-rows-5 gap-4 text-neutral-300 pb-24">
+                    <div class="grid grid-cols-1 gap-4 text-neutral-300 pb-24">
                         <!-- About Me -->
-                        <div class="row-start-1 backdrop-blur-sm rounded-3xl transition ease-in-out hover:scale-105">
+                        <div class="row-start-1 backdrop-blur-lg rounded-3xl transition ease-in-out hover:scale-105">
                             <div class="p-8">
-                                <div class="flex items-center space-x-3">
-                                    <i class="fa-solid fa-user"></i>
+                                <div class="flex items-center space-x-3 pb-4">
+                                    <!-- <i class="fa-solid fa-user"></i> -->
+                                    <img class="rounded-full h-12 w-12" src="{{ url_for('static', filename='./img/profile-picture.jpg') }}" alt="">
                                     <h2 class="font-semibold">About Me</h2>
                                 </div>
                                 <div class="font-extralight">
                                     <p>
                                         A BSC (Hons) graduate from Stellenbosch University with a background in Computer Science and Genetics. 
                                     </p>
-                                    <p class="pt-4 text-sm">In my time away from code I enjoy playing, listening and creating music from sound design, mixing
-                                        and mastering, to playing guitar or piano  &#127932. I also enjoy spending time at the gym,
-                                        on a board in the ocean or hiking mountains  &#127957. I'll gladly spend a lazy weekend evening watching Netflix or YouTube  &#128250 
-                                        if I'm not watching a football game &#9917, F1 race, or steaming in the sauna.
+                                    <p class="pt-4">
+                                        Of the topics I have covered thus far in my studies I have enjoyed machine learning (ML) and artificial intelligence (AI) the most.
+                                        Alongside these related disciplines, I have been fortunate to gain experience in high-level languages such as Python, Java and Typescript,
+                                        as well as low-level languages for embedded systems such as ANSI-C, and ARM64 and IA-64 assembly.
+
+                                    </p>
+                                    <p class="pt-4">In my time away from code I enjoy playing, listening and creating music from sound design, mixing
+                                        and mastering, to playing guitar or piano. I also enjoy spending time at the gym,
+                                        on a board in the ocean or hiking mountains. I'll gladly spend a lazy weekend evening watching Netflix or YouTube
+                                        if I'm not watching a football game, F1 race, or steaming in the sauna.
                                     </p>
                                 </div>
                             </div>
                         </div>
+
                         <!-- Experience -->
-                        <div class="row-start-2 bg-neutral-800/50 backdrop-blur-sm rounded-3xl transition ease-in-out hover:scale-105">
+                        <div class="row-start-2 bg-neutral-800/50 backdrop-blur-lg rounded-3xl transition ease-in-out hover:scale-105">
                             <div class="p-8">
                                 <div class="flex items-center space-x-3">
                                     <i class="fa-solid fa-briefcase"></i>
                                     <h2 class="font-semibold">Experience</h2>
                                 </div>
-                                <p>first sentence</p>
-                                <p>second sentence, new paragraph.</p>
+                                <div class="grid grid-cols-1 divide-y divide-neutral-700 p-4">
+                                    <!-- # 1 -->
+                                    <div class="grid-row-1 p-4">
+                                        <div class="flex items-center space-x-3 pb-2">
+                                            <img class="rounded-lg h-10 w-10" src="{{ url_for('static', filename='./img/su-logo.jpg') }}" alt="">
+                                            <p class="font-semibold">Student Assistant</p>
+                                            <p class="font-thin font-sm italic">Stellenbosch University</p>
+                                            <p class="font-thin font-xs">Feb 2022 - Nov 2022</p>
+                                        </div>
+                                        <p class="font-light">I was a student assistant, helping students understand the work, marking biweekly assignments and invigilating exams. I was responsible for two modules, Scientific Computing 272 and Scientific Computing 372.</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
                         <!-- Projects -->
-                        <div class="row-start-3 bg-neutral-800/50 backdrop-blur-sm rounded-3xl transition ease-in-out hover:scale-105">
+                        <div class="row-start-3 bg-neutral-800/50 backdrop-blur-lg rounded-3xl transition ease-in-out hover:scale-105">
                             <div class="p-8">
                                 <div class="flex items-center space-x-3">
                                     <i class="fa-solid fa-code"></i>
                                     <h2 class="font-semibold">Projects</h2>
                                 </div>
-                                <p>first sentence</p>
-                                <p>second sentence, new paragraph.</p>
+                                <div class="grid grid-cols-1 divide-y divide-neutral-700 p-4">
+                                    <!-- # 1 -->
+                                    <div class="grid-row-1 p-4">
+                                        <div class="flex items-center space-x-3 pb-2">
+                                            <img class="rounded-lg h-10 w-10" src="{{ url_for('static', filename='./img/cify-logo.png') }}" alt="">
+                                            <p class="font-semibold">Computational Intelligence Framework for Python</p>
+                                            <a href="https://davidmccleave.github.io/cify/" class="inline-flex items-center font-sm text-blue-200 hover:underline">
+                                                Homepage
+                                            <svg aria-hidden="true" class="ml-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                                            </a>
+                                        </div>
+                                        <p class="font-light">CIFY is a framework for common computational intelligence paradigms written in Python. The framework provides end users with the ability to easily and reliably implement nature-inspired metaheuristics. A collection of well-known metaheuristics are provided alongside tools to manipulate these metaheuristics, define objective functions for them to optimize, and create pipelines out of collections of varying approaches.</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
                         <!-- Education -->
-                        <div class="row-start-4 bg-neutral-800/50 backdrop-blur-sm rounded-3xl transition ease-in-out hover:scale-105">
+                        <div class="row-start-4 bg-neutral-800/50 backdrop-blur-lg rounded-3xl transition ease-in-out hover:scale-105">
                             <div class="p-8">
                                 <div class="flex items-center space-x-3">
                                     <i class="fa-solid fa-graduation-cap"></i>
                                     <h2 class="font-semibold">Education</h2>
                                 </div>
-                                <p>first sentence</p>
-                                <p>second sentence, new paragraph.</p>
+                                <div class="grid grid-cols-1 divide-y divide-neutral-700 p-4">
+                                    <!-- # 1 -->
+                                    <div class="grid-row-1 p-4">
+                                        <div class="flex items-center space-x-3 pb-2">
+                                            <img class="rounded-lg h-10 w-10" src="{{ url_for('static', filename='./img/su-logo.jpg') }}" alt="">
+                                            <p class="font-semibold">BSC (Hons) Computer Science</p>
+                                            <p class="font-thin font-sm italic">Stellenbosch University</p>
+                                            <p class="font-thin font-xs">Feb 2022 - Nov 2022</p>
+                                        </div>
+                                        <p class="font-light">Completed an honours in computer science specialising in Artificial Intelligence (AI), Machine Learning (ML), Compiler Construction, Computer Vision (CV) and Data Science (DS).</p>
+                                    </div>
+                                    <!-- # 2 -->
+                                    <div class="grid-row-2 p-4">
+                                        <div class="flex items-center space-x-3 pb-2">
+                                            <img class="rounded-lg h-10 w-10" src="{{ url_for('static', filename='./img/su-logo.jpg') }}" alt="">
+                                            <p class="font-semibold">BSC Computer Science</p>
+                                            <p class="font-thin font-sm italic">Stellenbosch University</p>
+                                            <p class="font-thin font-xs">Jan 2019 - Nov 2021</p>
+                                        </div>
+                                        <p class="font-light">Completed the 3-year Bachelor of Science degree, double majoring in computer science and genetics, in the allotted 3 years.</p>
+                                    </div>
+                                    <!-- # 3 -->
+                                    <div class="grid-row-2 p-4">
+                                        <div class="flex items-center space-x-3 pb-2">
+                                            <img class="rounded-lg h-10 w-10" src="{{ url_for('static', filename='./img/kearsney-logo.png') }}" alt="">
+                                            <p class="font-semibold">IEB Matric</p>
+                                            <p class="font-thin font-sm italic">Kearsney College</p>
+                                            <p class="font-thin font-xs">Jan 2014 - Dec 2018</p>
+                                        </div>
+                                        <p class="font-light">Seven IEB distinctions at the end of matric where I averaged 84%.</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
                         <!-- Contact -->
-                        <div class="row-start-5 bg-neutral-800/50 backdrop-blur-sm rounded-3xl transition ease-in-out hover:scale-105">
-                            <div class="p-6">
+                        <div class="row-start-5 backdrop-blur-sm rounded-3xl transition ease-in-out hover:scale-105">
+                            <div class="flex space-x-12 p-6">
                                 <div class="flex items-center space-x-5">
                                     <i class="fa-brands fa-github"></i>
                                     <a href="https://www.github.com/davidmccleave/" class="inline-flex items-center font-medium text-orange-200 hover:underline">

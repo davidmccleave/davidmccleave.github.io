@@ -4,7 +4,7 @@ const canvas = document.querySelector('.canvas');
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 scene.add(camera);
-camera.position.set(0, 20, 30);
+camera.position.set(0, 0, 25);
 camera.lookAt(scene.position);
 
 // set up renderer
@@ -29,7 +29,7 @@ function onWindowResize() {
 
 // add lights
 var light = new THREE.PointLight(0xFFFFFF);
-light.position.set(20, 0, 20);
+light.position.set(0, 0, 20);
 var lightAmb = new THREE.AmbientLight(0x777777);
 scene.add(light);
 scene.add(lightAmb);
@@ -37,6 +37,15 @@ scene.add(lightAmb);
 // add grid
 // var grid = new THREE.GridHelper(100, 1);
 // scene.add(grid);
+
+// add line
+const lineMaterial = new THREE.LineBasicMaterial({
+    color : 0x404040
+});
+const points = [];
+const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
+const line = new THREE.Line(lineGeometry, lineMaterial);
+scene.add(line);
 
 // Create a circle around the mouse and move it. The sphere has opacity 0.
 var mouse = {x : 0, y: 0};
@@ -122,9 +131,21 @@ function updateParticles() {
     }
 }
 
+function updateLine() {
+    const points = [];
+    for (const particle of particles) {
+        points.push(new THREE.Vector3(particle.mouseMesh.position.x,
+                                      particle.mouseMesh.position.y,
+                                      particle.mouseMesh.position.z));
+    }
+    const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
+    line.geometry = lineGeometry;
+}
+
 function animate() {
     requestAnimationFrame(animate)
     updateParticles()
+    updateLine()
     playScrollAnimations()
     render()
 }
@@ -166,9 +187,9 @@ function scalePercent(start, end) {
 //add an animation that moves the camera between 20-40 percent of scroll
 animationScripts.push({
     start: 0,
-    end: 101,
+    end: 75,
     func: () => {
-        camera.position.z = lerp(30, -5, scalePercent(0, 100))
+        camera.position.z = lerp(25, -8, scalePercent(0, 75))
     },
 })
 
