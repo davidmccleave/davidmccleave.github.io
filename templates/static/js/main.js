@@ -32,7 +32,7 @@ function onWindowResize() {
 var light = new THREE.PointLight(0xfef3c7); // amber-100
 light.position.set(0, 10, 30);
 var light2 = new THREE.PointLight(0xfef3c7); // amber-100
-light2.position.set(-20, 20, 0);
+light2.position.set(-30, 20, 0);
 scene.add(light);
 scene.add(light2);
 // const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
@@ -206,7 +206,7 @@ animationScripts.push({
     start: 0,
     end: 70,
     func: () => {
-        camera.position.z = lerp(30, -10, scalePercent(0, 75))
+        camera.position.z = lerp(30, -10, scalePercent(0, 70))
     },
 })
 
