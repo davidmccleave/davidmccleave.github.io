@@ -4,7 +4,7 @@ const canvas = document.querySelector('.canvas');
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 scene.add(camera);
-camera.position.set(0, 0, 25);
+camera.position.set(0, 0, 30);
 camera.lookAt(scene.position);
 
 // set up renderer
@@ -14,7 +14,8 @@ var renderer = new THREE.WebGLRenderer({
     powerPreference: 'high-performance',
     antialias: true
 });
-
+renderer.gammaInput = true;
+renderer.gammaOutput = true;
 renderer.setPixelRatio(window.devicePixelRatio)
 renderer.setSize( window.innerWidth, window.innerHeight );
 canvas.appendChild( renderer.domElement );
@@ -28,11 +29,14 @@ function onWindowResize() {
 }
 
 // add lights
-// var light = new THREE.PointLight(0xFFFFFF);
-// light.position.set(-50, 50, 0);
-// scene.add(light);
-const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
-scene.add( directionalLight );
+var light = new THREE.PointLight(0xfef3c7); // amber-100
+light.position.set(0, 10, 30);
+var light2 = new THREE.PointLight(0xfef3c7); // amber-100
+light2.position.set(-20, 20, 0);
+scene.add(light);
+scene.add(light2);
+// const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+// scene.add( directionalLight );
 
 // add grid
 // var grid = new THREE.GridHelper(100, 1);
@@ -50,33 +54,41 @@ scene.add(line);
 // Create a circle around the mouse and move it. The sphere has opacity 0.
 var mouse = {x : 0, y: 0};
 
+var particleGeometry = new THREE.SphereGeometry(1, 16, 16);
+var envMap = new THREE.TextureLoader().load('envMap.png');
+envMap.mapping = THREE.SphericalReflectionMapping;
+
 class Particle {
     constructor() {
-        var mouseGeometry = new THREE.SphereGeometry(1, 16, 16);
-        var mouseMaterial = new THREE.MeshBasicMaterial({
-            color: getRandomColour()
+        var particleMaterial = new THREE.MeshStandardMaterial({
+            color: getRandomColour(),
+            roughness: 0
         });
-        this.mouseMesh = new THREE.Mesh(mouseGeometry, mouseMaterial);
-        this.mouseMesh.position.z = -5;
+        // var particleMaterial = new THREE.MeshBasicMaterial({
+        //     color: getRandomColour(),
+        // });
+        particleMaterial.envMap = envMap;
+        this.particleMesh = new THREE.Mesh(particleGeometry, particleMaterial);
+        this.particleMesh.position.z = -5;
         this.velocity = new THREE.Vector3();
         this.velocity.random();
-        this.w = getRandomFloat(0.95, 0.99);
-        this.c1 = 0.005;
+        this.w = getRandomFloat(0.8, 0.95);
+        this.c1 = 0.01;
         this.c2 = 0.015;
 
         this.frameCount = 0;
         this.frameMax = getRandomInt(300, 1500);
         this.pBest = this.newPBest();
 
-        scene.add(this.mouseMesh);
+        scene.add(this.particleMesh);
     }
 
     updatePosition(mousePos) {
-        var currPos = new THREE.Vector3(this.mouseMesh.position.x, this.mouseMesh.position.y, this.mouseMesh.position.z);
+        var currPos = new THREE.Vector3(this.particleMesh.position.x, this.particleMesh.position.y, this.particleMesh.position.z);
         this.updateVelocity(mousePos)
-        this.mouseMesh.position.x = currPos.x + this.velocity.x;
-        this.mouseMesh.position.y = currPos.y + this.velocity.y;
-        this.mouseMesh.position.z = currPos.z + this.velocity.z;
+        this.particleMesh.position.x = currPos.x + this.velocity.x;
+        this.particleMesh.position.y = currPos.y + this.velocity.y;
+        this.particleMesh.position.z = currPos.z + this.velocity.z;
 
         this.frameCount += 1;
         if (this.frameCount > this.frameMax) {
@@ -87,7 +99,7 @@ class Particle {
     }
 
     updateVelocity(mousePos) {
-        var currPos = new THREE.Vector3(this.mouseMesh.position.x, this.mouseMesh.position.y, this.mouseMesh.position.z);
+        var currPos = new THREE.Vector3(this.particleMesh.position.x, this.particleMesh.position.y, this.particleMesh.position.z);
         // let r1 = getRandomFloat(0, 1);
         // let r2 = getRandomFloat(0, 1);
         this.velocity.x = this.w * this.velocity.x + 0.01 * (this.c1 * (this.pBest.x - currPos.x) + this.c2 * (mousePos.x - currPos.x));
@@ -95,7 +107,7 @@ class Particle {
         this.velocity.z = this.w * this.velocity.z + 0.01 * (this.c1 * (this.pBest.z - currPos.z) + this.c2 * (mousePos.z - currPos.z));
     }
 
-    newPBest() { return new THREE.Vector3(getRandomFloat(-80, 80), getRandomFloat(-50, 50), getRandomFloat(-50, 30)); }
+    newPBest() { return new THREE.Vector3(getRandomFloat(-80, 80), getRandomFloat(-50, 50), getRandomFloat(0, 50)); }
 }
 
 let particles = [];
@@ -134,9 +146,9 @@ function updateParticles() {
 function updateLine() {
     const points = [];
     for (const particle of particles) {
-        points.push(new THREE.Vector3(particle.mouseMesh.position.x,
-                                      particle.mouseMesh.position.y,
-                                      particle.mouseMesh.position.z));
+        points.push(new THREE.Vector3(particle.particleMesh.position.x,
+                                      particle.particleMesh.position.y,
+                                      particle.particleMesh.position.z));
     }
     const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
     line.geometry = lineGeometry;
@@ -167,9 +179,14 @@ function getRandomInt(min, max) {
 }
 
 function getRandomColour() {
-    // tailwind - cyan, green
-    const colours = [0xa5f3fc, 0x67e8f9, 0x22d3ee, 0x06b6d4, 0x0891b2, 0x0e7490, 0x4ade80, 0x22c55e, 0x16a34a, 0x15803d, 0x14b8a6];
-    return colours[getRandomInt(0, colours.length)];
+    const colours = [
+        0x15803d, 0x166534, // green-700-800
+        0x0e7490, 0x155e75, // cyan-700-800
+        0x0369a1, 0x075985   // sky-700-800
+    ]
+    var index = getRandomInt(0, colours.length - 1);
+    console.log(index)
+    return colours[index];
 }
 
 const animationScripts = [];
@@ -187,9 +204,9 @@ function scalePercent(start, end) {
 //add an animation that moves the camera between 20-40 percent of scroll
 animationScripts.push({
     start: 0,
-    end: 75,
+    end: 70,
     func: () => {
-        camera.position.z = lerp(25, -8, scalePercent(0, 75))
+        camera.position.z = lerp(30, -10, scalePercent(0, 75))
     },
 })
 
@@ -213,51 +230,3 @@ document.body.onscroll = () => {
 
 window.scrollTo({ top: 0, behavior: 'smooth' })
 animate()
-
-
-// -----------------------------------------------------------------------------
-
-
-
-// Move cube around with mouse
-
-// camera.position.setZ(50)
-// renderer.render(scene, camera)
-
-// const ambl = new THREE.AmbientLight(0xFFFFFF)
-// scene.add(ambl)
-
-// const box = new THREE.Mesh(
-//     new THREE.BoxGeometry(3, 3, 3),
-//     new THREE.MeshBasicMaterial({color:0xFFFFFF})
-// )
-// box.scale.set(3, 3, 3)
-// scene.add(box)
-
-// function animate(){
-//     requestAnimationFrame(animate)
-//     box.rotation.x += 0.01
-//     box.rotation.y += 0.01
-//     box.rotation.z += 0.01
-//     renderer.render(scene, camera)
-// }
-// animate()
-
-// window.onresize = function(e) {
-//     camera.aspect = window.innerWidth / window.innerHeight
-//     camera.updateProjectionMatrix()
-//     renderer.setSize(window.innerWidth, window.innerHeight)
-// }
-
-// let oldx = 0
-// let oldy = 0
-
-// window.onmousemove = function(ev) {
-//     let changex = ev.x - oldx
-//     let changey = ev.y - oldy
-//     camera.position.x += changex / 100
-//     camera.position.y -= changey / 100
-
-//     oldx = ev.x
-//     oldy = ev.y
-// }

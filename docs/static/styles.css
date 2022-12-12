@@ -8,8 +8,12 @@ body {
     transition: opacity 5s;
 }
 
+.blurb {
+    position: relative;
+    z-index: -2;
+}
+
 .canvas {
-    background-color: #171717;
     position: fixed;
     top: 0;
     right: 0;
