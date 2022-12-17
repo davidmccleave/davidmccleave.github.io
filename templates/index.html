@@ -7,6 +7,12 @@
         <meta name="author" content="David McCleave"/>
         <script src="https://kit.fontawesome.com/fc55552c3c.js" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+        <!-- SEE: https://favicon.io/favicon-converter/-->
+        <link rel="shortcut icon" href="{{ url_for('static', filename='icons/favicon.ico') }}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='icons/apple-touch-icon.png') }}">
+        <link rel="icon" type="image/png" sizes="180x180" href="{{ url_for('static', filename='icons/favicon-32x32.png') }}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='icons/favicon-16x16.png') }}">
+
         <script src="https://cdn.tailwindcss.com"></script>
         <script src="{{ url_for('static', filename='js/three.js') }}"></script>
         <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
