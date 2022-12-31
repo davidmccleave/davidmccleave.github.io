@@ -183,49 +183,49 @@
 
                         <!-- Research -->
                         <div class="row-start-5 bg-neutral-800/50 backdrop-blur-lg rounded-3xl transition ease-in-out hover:scale-105">
-                            <div class="p-3 md:p-8">
+                            <div class="p-3 md:p-8" tabindex="0">
                                 <div class="flex items-center space-x-3">
                                     <i class="fa-solid fa-book-open-reader"></i>
                                     <h2 class="font-semibold">Research</h2>
                                 </div>
-                                <div class="grid grid-cols-1 divide-y divide-neutral-700 p-2 md:p-4">
-                                    <!-- # 1 -->
-                                    <div class="grid-row-1 p-2 md:p-4">
-                                        <div class="flex flex-wrap items-center space-x-3 space-y-2 pb-2">
-                                            <img class="rounded-lg h-10 w-10" src="{{ url_for('static', filename='./img/su-logo.jpg') }}" alt="">
-                                            <p class="font-semibold">BSC (Hons) Computer Science</p>
-                                            <p class="font-thin font-sm italic">Stellenbosch University</p>
-                                            <p class="font-thin font-xs">Feb 2022 - Nov 2022</p>
-                                        </div>
-                                        <p class="font-light">Completed an honours in computer science specialising in Artificial Intelligence (AI), Machine Learning (ML), Compiler Construction, Computer Vision (CV) and Data Science (DS).</p>
+                                <!-- <div class="grid grid-cols-1 divide-y divide-neutral-700 p-2 md:p-4"> -->
+                                    <button class="accordion">Section 1</button>
+                                    <div class="panel">
+                                    <p>Lorem ipsum...</p>
                                     </div>
-                                    <!-- # 2 -->
-                                    <div class="grid-row-2 p-2 md:p-4">
-                                        <div class="flex flex-wrap items-center space-x-3 space-y-2 pb-2">
-                                            <img class="rounded-lg h-10 w-10" src="{{ url_for('static', filename='./img/su-logo.jpg') }}" alt="">
-                                            <p class="font-semibold">BSC Computer Science</p>
-                                            <p class="font-thin font-sm italic">Stellenbosch University</p>
-                                            <p class="font-thin font-xs">Jan 2019 - Nov 2021</p>
-                                        </div>
-                                        <p class="font-light">Completed the 3-year Bachelor of Science degree, double majoring in computer science and genetics, in the allotted 3 years.</p>
+
+                                    <button class="accordion">Section 2</button>
+                                    <div class="panel">
+                                    <p>Lorem ipsum...</p>
                                     </div>
-                                    <!-- # 3 -->
-                                    <div class="grid-row-2 p-2 md:p-4">
-                                        <div class="flex flex-wrap items-center space-x-3 space-y-2 pb-2">
-                                            <img class="rounded-lg h-10 w-10" src="{{ url_for('static', filename='./img/kearsney-logo.png') }}" alt="">
-                                            <p class="font-semibold">IEB Matric</p>
-                                            <p class="font-thin font-sm italic">Kearsney College</p>
-                                            <p class="font-thin font-xs">Jan 2014 - Dec 2018</p>
-                                        </div>
-                                        <p class="font-light">Achieved six IEB distinctions at the end of matric where I averaged 84%.
-                                            Whilst at Kearsney, I engaged in a wide range of sports including rugby, field hockey, waterpolo, cricket, football and cross country. Alongside this, I was a part of the inner-circle public speaking club by invitation.
-                                            I was also involved in the Gillingham (house) band in my final year where we went on to take first place in the inter-house “battle-of-the-bands”.
-                                        </p>
+
+                                    <button class="accordion">Section 3</button>
+                                    <div class="panel">
+                                    <p>Lorem ipsum...</p>
                                     </div>
-                                </div>
                             </div>
                         </div>
 
+                        <script>
+                            var acc = document.getElementsByClassName("accordion");
+                            var i;
+
+                            for (i = 0; i < acc.length; i++) {
+                            acc[i].addEventListener("click", function() {
+                                /* Toggle between adding and removing the "active" class,
+                                to highlight the button that controls the panel */
+                                this.classList.toggle("active");
+
+                                /* Toggle between hiding and showing the active panel */
+                                var panel = this.nextElementSibling;
+                                if (panel.style.display === "block") {
+                                panel.style.display = "none";
+                                } else {
+                                panel.style.display = "block";
+                                }
+                            });
+                            }
+                        </script>
 
                         <!-- Transcripts -->
                         <div class="row-start-6 backdrop-blur-lg rounded-3xl transition ease-in-out hover:scale-105">
