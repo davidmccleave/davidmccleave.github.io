@@ -181,8 +181,12 @@ function getRandomInt(min, max) {
 function getRandomColour() {
     const colours = [
         0x15803d, 0x166534, // green-700-800
+        0x047857, 0x065f46, // emerald-700-800
+        0x0f766e, 0x115e59, // teal-700-800
         0x0e7490, 0x155e75, // cyan-700-800
-        0x0369a1, 0x075985   // sky-700-800
+        0x0369a1, 0x075985, // sky-700-800
+        0x1d4ed8, 0x1e40af, // blue-700-800
+        0x4338ca, 0x3730a3  // indigo-700-800
     ]
     var index = getRandomInt(0, colours.length - 1);
     console.log(index)
