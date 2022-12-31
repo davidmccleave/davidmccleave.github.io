@@ -102,12 +102,12 @@ class Particle {
         var currPos = new THREE.Vector3(this.particleMesh.position.x, this.particleMesh.position.y, this.particleMesh.position.z);
         // let r1 = getRandomFloat(0, 1);
         // let r2 = getRandomFloat(0, 1);
-        this.velocity.x = this.w * this.velocity.x + 0.01 * (this.c1 * (this.pBest.x - currPos.x) + this.c2 * (mousePos.x - currPos.x));
-        this.velocity.y = this.w * this.velocity.y + 0.01 * (this.c1 * (this.pBest.y - currPos.y) + this.c2 * (mousePos.y - currPos.y));
-        this.velocity.z = this.w * this.velocity.z + 0.01 * (this.c1 * (this.pBest.z - currPos.z) + this.c2 * (mousePos.z - currPos.z));
+        this.velocity.x = this.w * this.velocity.x + 0.015 * (this.c1 * (this.pBest.x - currPos.x) + this.c2 * (mousePos.x - currPos.x));
+        this.velocity.y = this.w * this.velocity.y + 0.015 * (this.c1 * (this.pBest.y - currPos.y) + this.c2 * (mousePos.y - currPos.y));
+        this.velocity.z = this.w * this.velocity.z + 0.015 * (this.c1 * (this.pBest.z - currPos.z) + this.c2 * (mousePos.z - currPos.z));
     }
 
-    newPBest() { return new THREE.Vector3(getRandomFloat(-80, 80), getRandomFloat(-50, 50), getRandomFloat(0, 50)); }
+    newPBest() { return new THREE.Vector3(getRandomFloat(-80, 80), getRandomFloat(-50, 50), getRandomFloat(-10, 20)); }
 }
 
 let particles = [];
@@ -201,12 +201,12 @@ function scalePercent(start, end) {
     return (scrollPercent - start) / (end - start)
 }
 
-//add an animation that moves the camera between 20-40 percent of scroll
+//add an animation that moves the camera.
 animationScripts.push({
     start: 0,
-    end: 70,
+    end: 50,
     func: () => {
-        camera.position.z = lerp(30, -10, scalePercent(0, 70))
+        camera.position.z = lerp(30, -10, scalePercent(0, 50))
     },
 })
 
