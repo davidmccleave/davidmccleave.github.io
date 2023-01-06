@@ -29,9 +29,9 @@ function onWindowResize() {
 }
 
 // add lights
-var light = new THREE.PointLight(0xfed7aa); // orange-200
+var light = new THREE.PointLight(0xfffbeb); // amber-50
 light.position.set(0, 10, 30);
-var light2 = new THREE.PointLight(0xfed7aa); // orange-200
+var light2 = new THREE.PointLight(0xfffbeb); // amber-50
 light2.position.set(-30, 20, 0);
 scene.add(light);
 scene.add(light2);
