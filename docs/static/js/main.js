@@ -29,12 +29,13 @@ function onWindowResize() {
 }
 
 // add lights
-var light = new THREE.PointLight(0xfef3c7); // amber-100
+var light = new THREE.PointLight(0xfed7aa); // orange-200
 light.position.set(0, 10, 30);
-var light2 = new THREE.PointLight(0xfef3c7); // amber-100
+var light2 = new THREE.PointLight(0xfed7aa); // orange-200
 light2.position.set(-30, 20, 0);
 scene.add(light);
 scene.add(light2);
+
 // const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
 // scene.add( directionalLight );
 
@@ -184,12 +185,11 @@ function getRandomColour() {
         0x047857, 0x065f46, // emerald-700-800
         0x0f766e, 0x115e59, // teal-700-800
         0x0e7490, 0x155e75, // cyan-700-800
-        0x0369a1, 0x075985, // sky-700-800
-        0x1d4ed8, 0x1e40af, // blue-700-800
-        0x4338ca, 0x3730a3  // indigo-700-800
+        0x0284c7, 0x0369a1, 0x075985, // sky-600-800
+        0x2563eb, 0x1d4ed8, 0x1e40af, // blue-600-800
+        0x4338ca, // indigo-700
     ]
     var index = getRandomInt(0, colours.length - 1);
-    console.log(index)
     return colours[index];
 }
 
