@@ -22,7 +22,7 @@
     <body onload="document.body.style.opacity='1'">
         <div class="canvas text-8xl text-slate-600"></div>
         <main>
-            <div class="subpixel-antialiased font-sans p-3 pt-4 md:pt-12 md:pb-24 md:pl-16 md:pr-16 lg:pl-52 lg:pr-52">
+            <div class="subpixel-antialiased font-sans p-3 pt-4 md:pt-12 md:pb-24 md:pl-16 md:pr-16 lg:pl-60 lg:pr-60">
                 <div class="space-y-10 h-screen items-start">
                     <div class="flex">
                         <div class="grid grid-rows-2 font-sans font-bold text-orange-200 text-4xl md:text-6xl">
@@ -34,10 +34,10 @@
                     <!-- Introduction -->
                     <div class="text-3xl md:text-4xl text-neutral-300 blurb">
                         <div>
-                            <span>I code for AI & ML</span>
+                            <span>I enjoy coding all things data science,</span>
                         </div>
                         <div>
-                            <span>research and the Web.</span>
+                            <span>software engineering, and for web development.</span>
                         </div>
                     </div>
                     <div class="grid grid-cols-1 gap-5 text-neutral-300 pb-4">
@@ -51,7 +51,7 @@
                                 </div>
                                 <div class="font-extralight">
                                     <p>
-                                        A BSC (Honours) graduate from Stellenbosch University with a background in Computer Science and Genetics. 
+                                        A developer and recent BSC (Honours) graduate from Stellenbosch University with a background in Computer Science and Genetics. 
                                     </p>
                                     <p class="pt-4">
                                         I am a scientist at heart with a passion for machine learning (ML) and artificial intelligence (AI). Coming in a close second place, I enjoy
@@ -61,6 +61,7 @@
                                     </p>
                                     <p class="pt-4">In my time away from code I enjoy playing, listening to and creating music from sound design, mixing
                                         and mastering, to playing guitar or piano. I also enjoy spending time at the gym, on a board in the ocean or hiking mountains. 
+                                        For those concerned, I hold dual citizenship and can work in South Africa and the United Kingdom.
                                     </p>
                                 </div>
                             </div>
@@ -150,7 +151,7 @@
                                             <p class="font-thin font-sm italic">Stellenbosch University</p>
                                             <p class="font-thin font-xs">Feb 2022 - Nov 2022</p>
                                         </div>
-                                        <p class="font-light">Completed an honours in computer science specialising in Artificial Intelligence (AI), Machine Learning (ML), Compiler Construction, Computer Vision (CV) and Data Science (DS).</p>
+                                        <p class="font-light">Completed an honours in computer science specialising in Artificial Intelligence (AI), Machine Learning (ML), Compiler Construction, Computer Vision (CV) and Data Science (DS). Whilst working through the honours programme I was a student assistant (demi).</p>
                                     </div>
                                     <!-- # 2 -->
                                     <div class="grid-row-2 p-2 md:p-4">
@@ -160,7 +161,7 @@
                                             <p class="font-thin font-sm italic">Stellenbosch University</p>
                                             <p class="font-thin font-xs">Jan 2019 - Nov 2021</p>
                                         </div>
-                                        <p class="font-light">Completed the 3-year Bachelor of Science degree, double majoring in computer science and genetics, in the allotted 3 years.</p>
+                                        <p class="font-light">I completed the 3-year Bachelor of Science degree, double majoring in computer science and genetics, in the allotted 3 years. Whilst studying I was a resident at Goldfields Residency.</p>
                                     </div>
                                     <!-- # 3 -->
                                     <div class="grid-row-2 p-2 md:p-4">
@@ -170,10 +171,12 @@
                                             <p class="font-thin font-sm italic">Kearsney College</p>
                                             <p class="font-thin font-xs">Jan 2014 - Dec 2018</p>
                                         </div>
-                                        <p class="font-light">Achieved six IEB distinctions at the end of matric where I averaged 84%.
+                                        <p class="font-light">
+
+                                            I achieved six distinctions at the end of matric for English, Information Technology, Life Orientation, Life Sciences, Mathematics and Physical Sciences.
                                             Whilst at Kearsney, I engaged in a wide range of sports including rugby, field hockey, waterpolo, cricket, football and cross country. Alongside this, I was a part of the inner-circle public speaking club by invitation.
                                             I was also involved in the Gillingham (house) band in my final year where we went on to take first place in the inter-house “battle-of-the-bands”.
-                                            I was also voted "Businessman Of The Year" in 2015 and won "Business Of The Year" in the same year.
+                                            I was also voted Businessman Of The Year in 2015 and won Business Of The Year in the same year.
                                         </p>
                                     </div>
                                 </div>
@@ -344,7 +347,6 @@
                                 <div class="grid grid-cols-1 divide-y divide-neutral-800 p-2 md:p-4">
                                     <!-- # 1 -->
                                     <div class="grid-row-1">
-                                        <!-- <a href="https://drive.google.com/file/d/1cVgvPtMO2eQrb-TrLxh1IL9DHj61EnFi/view?usp=share_link" -->
                                         <a href="{{ url_for('static', filename='files/davidmccleave-CV.pdf') }}"
                                            target="_blank"
                                            class="text-xs md:text-base text-sky-600 hover:underline">
@@ -353,7 +355,6 @@
                                     </div>
                                     <!-- # 2 -->
                                     <div class="grid-row-2">
-                                        <!-- <a href="https://drive.google.com/file/d/1HUAW2pdlJ1PGLZ8uVRPxIByzX7ccVk5U/view?usp=share_link" -->
                                         <a href="{{ url_for('static', filename='files/davidmccleave-SU-undergrad-certificate.pdf') }}"
                                            target="_blank"
                                            class="text-xs md:text-base text-sky-600 hover:underline">
@@ -362,25 +363,30 @@
                                     </div>
                                     <!-- # 3 -->
                                     <div class="grid-row-3">
-                                        <!-- <a href="https://drive.google.com/file/d/1ZEkh-nb6CmxMSEE1btMfiPt0VowxDfPF/view?usp=share_link" -->
+                                        <a href="{{ url_for('static', filename='files/davidmccleave-SU-postgrad-certificate.pdf') }}"
+                                           target="_blank"
+                                           class="text-xs md:text-base text-sky-600 hover:underline">
+                                           Stellenbosch University Honours certificate
+                                        </a>
+                                    </div>
+                                    <!-- # 4 -->
+                                    <div class="grid-row-4">
                                         <a href="{{ url_for('static', filename='files/davidmccleave-SU-results-22628274.pdf') }}"
                                            target="_blank"
                                            class="text-xs md:text-base text-sky-600 hover:underline">
                                             Stellenbosch University results
                                         </a>
                                     </div>
-                                    <!-- # 4 -->
-                                    <div class="grid-row-4">
-                                        <!-- <a href="https://drive.google.com/file/d/18hyN7EGgZ_lmrBSfVOBju1V5XW36KH5v/view?usp=share_link" -->
+                                    <!-- # 5 -->
+                                    <div class="grid-row-5">
                                         <a href="{{ url_for('static', filename='files/davidmccleave-IEB-certificate.pdf') }}"
                                            target="_blank"
                                            class="text-xs md:text-base text-sky-600 hover:underline">
                                            IEB certificate
                                         </a>
                                     </div>
-                                    <!-- # 5 -->
-                                    <div class="grid-row-5">
-                                        <!-- <a href="https://drive.google.com/file/d/1bpMOCjs5miPrNN8NWYaJaVxjnn6XMPX7/view?usp=share_link" -->
+                                    <!-- # 6 -->
+                                    <div class="grid-row-6">
                                         <a href="{{ url_for('static', filename='files/davidmccleave-kearsney-headmaster-report.pdf') }}"
                                            target="_blank"
                                            class="text-xs md:text-base text-sky-600 hover:underline">
