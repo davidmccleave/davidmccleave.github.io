@@ -1,8 +1,8 @@
 Personal Portfolio Website
 ==========================
 
-This repository contains the code for my personal portfolio website hosted at [davidmccleave.com](https://www.davidmccleave.com).
-GoDaddy is used for hosting.
+This repository contains the code for my personal portfolio website previously hosted at [davidmccleave.com](https://www.davidmccleave.com).
+GoDaddy was used for hosting.
 
 The webapp uses flask as a backend and HTML5, Tailwind CSS and vanilla Javascript for the frontend. THREE.js is a 3D animations framework
 used on the frontend to display the "semi-optimizing" particles shown in the background of the webapp. These particles use weak
