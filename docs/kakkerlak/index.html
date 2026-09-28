@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kakkerlak Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pink: #f1d6df;
+    --orange: #db5726;
+    --brown: #442b19;
+    --cream: #fff9df;
+    --dark-green: #234d2a;
+    --lime: #b3cf68;
+    --white: #ffffff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: #e9e2d6;
+    font-family: 'Figtree', system-ui, sans-serif;
+    color: var(--brown);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+  }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+
+  /* ---------- phone frame (402 x 874, scaled to fit) ---------- */
+  .stage { width: 402px; height: 874px; flex: none; transform-origin: center center; }
+  .phone {
+    position: relative; width: 402px; height: 874px; overflow: hidden;
+    background: var(--pink); border-radius: 44px;
+    box-shadow: 0 0 0 10px #1d1410, 0 30px 60px rgba(0,0,0,.35);
+  }
+  body.fullscreen { background: var(--pink); }
+  body.fullscreen .phone { border-radius: 0; box-shadow: none; }
+
+  /* cropped sprite helper: the Figma exports are full canvases, cropped by % */
+  .crop { position: absolute; overflow: hidden; pointer-events: none; }
+  .crop > img { position: absolute; max-width: none; }
+
+  /* ---------- header (guessed placement) ---------- */
+  .icon-btn { position: absolute; display: grid; place-items: center; }
+  .burger { left: 20px; top: 52px; width: 44px; height: 44px; }
+  .logo { position: absolute; left: 50%; top: 38px; width: 112px; height: 65px; transform: translateX(-50%); }
+  .logo img { width: 100%; height: 100.54%; margin-top: -0.27%; display: block; }
+  .settings { right: 18px; top: 46px; width: 44px; height: 52px; }
+  .settings img { width: 36px; height: 48px; object-fit: cover; }
+
+  /* ---------- points pill ---------- */
+  .points {
+    position: absolute; left: 46px; top: 116px; width: 129px; height: 41px;
+    background: var(--cream); border: 2px solid var(--brown); border-radius: 10px;
+    display: flex; align-items: center; justify-content: flex-end; padding-right: 22px;
+    font-family: 'Patrick Hand', cursive; font-size: 24px; line-height: 1; letter-spacing: 1px;
+  }
+  .points.bump { animation: bump .45s ease; }
+  @keyframes bump { 40% { transform: scale(1.12); } }
+  .plus5 {
+    position: absolute; left: 148px; top: 150px; width: 44px; height: 24px;
+    opacity: 0; pointer-events: none;
+  }
+  .plus5.show { animation: floatUp 1.2s ease forwards; }
+  @keyframes floatUp {
+    0% { opacity: 0; transform: translateY(12px); }
+    20% { opacity: 1; transform: translateY(0); }
+    75% { opacity: 1; transform: translateY(-14px); }
+    100% { opacity: 0; transform: translateY(-24px); }
+  }
+
+  /* ---------- cup room ---------- */
+  .room-btn { position: absolute; left: -15px; top: 167px; width: 431px; height: 539px; }
+  .room {
+    position: absolute; left: 0; top: 0; width: 437px; height: 583px;
+    transform: scale(calc(431 / 437)); transform-origin: top left;
+  }
+  .room .bg { position: absolute; left: 0; top: 0; width: 100%; aspect-ratio: 2048 / 2732; object-fit: cover; pointer-events: none; }
+  .room .roach {
+    position: absolute; left: 40.5%; right: 11.67%; top: 204px; aspect-ratio: 2048 / 2732;
+    pointer-events: none; transform-origin: 50% 80%;
+  }
+  .room .roach img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .room .roach.wiggle { animation: wiggle .6s ease; }
+  @keyframes wiggle { 20% { transform: rotate(-6deg); } 50% { transform: rotate(5deg); } 80% { transform: rotate(-2deg); } }
+  .room .slot { transition: opacity .25s; }
+  .room .slot.placed { animation: drop .35s ease; }
+  @keyframes drop { from { opacity: 0; transform: translateY(-10px); } }
+
+  /* house (decorate / store) */
+  .house { position: absolute; left: 305px; top: 637px; width: 56px; height: 60px; }
+  .house:active { transform: scale(.94); }
+
+  /* ---------- bottom bar ---------- */
+  .tabbar {
+    position: absolute; left: 0; top: 746px; width: 402px; height: 128px;
+    background: var(--orange); border: 2px solid var(--brown);
+  }
+  .tab {
+    position: absolute; top: 12px; padding: 10px;
+    font-weight: 700; font-size: 24px; color: var(--cream); white-space: nowrap;
+  }
+  .tab:active { transform: translateY(1px); opacity: .85; }
+
+  /* ---------- overlays / pop-ups ---------- */
+  .scrim {
+    position: absolute; inset: 0; background: rgba(68, 43, 25, .35);
+    opacity: 0; pointer-events: none; transition: opacity .2s; z-index: 10;
+  }
+  .scrim.open { opacity: 1; pointer-events: auto; }
+  .popup {
+    position: absolute; left: 28px; top: 170px; width: 346px; height: 563px;
+    background: var(--pink); border-radius: 23px; z-index: 20;
+    box-shadow: 0 10px 30px rgba(68,43,25,.3), 0 0 0 2px rgba(68,43,25,.08);
+    transform: translateY(20px) scale(.97); opacity: 0; pointer-events: none;
+    transition: transform .22s ease, opacity .22s ease;
+  }
+  .popup.open { transform: none; opacity: 1; pointer-events: auto; }
+  .popup .scroll { position: absolute; inset: 0; overflow-y: auto; border-radius: 23px; scrollbar-width: none; }
+  .popup .scroll::-webkit-scrollbar { display: none; }
+  .close {
+    position: absolute; left: 284px; top: 8px; width: 49.5px; height: 49.5px;
+    display: grid; place-items: center; z-index: 2;
+  }
+  .close img { width: 35px; height: 35px; transform: rotate(-45deg); display: block; }
+  .popup h2 { position: absolute; left: 24px; top: 20px; font-size: 24px; font-weight: 700; }
+  .text-14 { font-size: 14px; line-height: normal; }
+
+  /* refuse */
+  .refuse-copy { position: absolute; left: 67px; top: 175px; width: 211px; text-align: center; font-weight: 700; }
+  .qr { position: absolute; left: 53px; top: 270px; width: 239px; height: 239px; }
+  .qr img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .qr.scanned { animation: flash .5s ease; }
+  @keyframes flash { 30% { filter: brightness(1.4); transform: scale(.97); } }
+  .hint { position: absolute; left: 0; right: 0; top: 522px; text-align: center; font-size: 12px; opacity: .6; }
+
+  /* reuse feed */
+  .feed { padding: 69px 44px 40px; }
+  .post + .post { margin-top: 160px; }
+  .post .pic { position: relative; width: 258px; height: 258px; border-radius: 18px; overflow: hidden; }
+  .post .pic img { position: absolute; left: .04%; top: -36.27%; width: 100.07%; height: 177.91%; max-width: none; }
+  .post .meta { position: relative; height: 0; }
+  .post .avatar { position: absolute; left: 0; top: 11px; width: 38px; height: 38px; border-radius: 50%; }
+  .post .author { position: absolute; left: 47px; top: 21px; width: 180px; font-weight: 700; }
+  .post .like { position: absolute; left: 234px; top: 14px; width: 24px; height: 24px; }
+  .post .like img { width: 24px; height: 24px; display: block; }
+  .post .like.pop { animation: bump .35s ease; }
+  .post .body { position: absolute; left: 47px; top: 50px; width: 211px; }
+  .post .more { position: absolute; left: 128px; top: 124px; width: 130px; text-align: right; font-weight: 700; }
+
+  /* furniture store */
+  .grid { position: relative; padding: 57px 24px 32px; display: grid; grid-template-columns: 138px 138px; column-gap: 21px; row-gap: 18px; }
+  .tile { position: relative; width: 138px; height: 138px; background: var(--white); border-radius: 15px; }
+  .tile.selected { box-shadow: inset 0 1px 6.6px rgba(0,0,0,.25); }
+  .tile.selected .crop { opacity: .9; }
+  .tile .label {
+    position: absolute; left: 4px; right: 4px; top: 113px;
+    font-weight: 700; font-size: 14px; text-align: center; line-height: normal;
+  }
+  .tile .price {
+    position: absolute; right: 8px; top: 8px; padding: 2px 7px; border-radius: 10px;
+    background: var(--cream); border: 1.5px solid var(--brown);
+    font-family: 'Patrick Hand', cursive; font-size: 15px; line-height: 1.1;
+  }
+  .tile .price.owned { background: var(--lime); }
+  .tile.shake { animation: shake .35s ease; }
+  @keyframes shake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+  .store-note { grid-column: 1 / -1; font-size: 13px; opacity: .7; margin-bottom: -4px; }
+
+  /* recycle / settings / about (guessed content) */
+  .stack { position: absolute; left: 24px; right: 24px; top: 76px; display: flex; flex-direction: column; gap: 12px; }
+  .card {
+    background: var(--white); border-radius: 15px; padding: 14px 16px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .swatch { width: 34px; height: 34px; border-radius: 10px; flex: none; }
+  .card strong { display: block; font-size: 16px; }
+  .card span { font-size: 13px; opacity: .8; }
+  .toggle { margin-left: auto; width: 46px; height: 26px; border-radius: 13px; background: #d9c9c0; position: relative; flex: none; transition: background .2s; }
+  .toggle::after { content: ''; position: absolute; left: 3px; top: 3px; width: 20px; height: 20px; border-radius: 50%; background: var(--white); transition: left .2s; }
+  .toggle.on { background: var(--orange); }
+  .toggle.on::after { left: 23px; }
+  .pill-btn {
+    align-self: center; margin-top: 8px; padding: 10px 22px; border-radius: 12px;
+    background: var(--orange); color: var(--cream); font-weight: 700; font-size: 16px; border: 2px solid var(--brown);
+  }
+  .about-logo { width: 180px; align-self: center; }
+
+  /* burger drawer */
+  .drawer {
+    position: absolute; left: 0; top: 0; width: 247px; height: 100%; z-index: 20;
+    background: var(--cream); border: 2px solid var(--brown); border-left: 0; border-radius: 0 10px 10px 0;
+    transform: translateX(-105%); transition: transform .25s ease;
+  }
+  .drawer.open { transform: none; }
+  .drawer .close { left: 10px; top: 42px; }
+  .drawer nav { position: absolute; left: 16px; top: 140px; display: flex; flex-direction: column; gap: 17px; }
+  .drawer nav button { text-align: left; font-weight: 700; font-size: 24px; line-height: 30px; }
+  .drawer nav button:active { color: var(--orange); }
+
+  .toast {
+    position: absolute; left: 50%; bottom: 150px; transform: translate(-50%, 10px);
+    background: var(--brown); color: var(--cream); padding: 10px 16px; border-radius: 12px;
+    font-size: 14px; font-weight: 700; opacity: 0; pointer-events: none; transition: .2s; z-index: 40; white-space: nowrap;
+  }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <div class="phone" id="phone">
+
+    <!-- header -->
+    <button class="icon-btn burger" data-open="drawer" aria-label="Menu">
+      <svg width="30" height="24" viewBox="0 0 30 24" fill="none" aria-hidden="true">
+        <rect y="1" width="30" height="4" rx="2" fill="#442b19"/>
+        <rect y="10" width="30" height="4" rx="2" fill="#442b19"/>
+        <rect y="19" width="30" height="4" rx="2" fill="#442b19"/>
+      </svg>
+    </button>
+    <div class="logo" aria-label="Kakkerlak"><img src="assets/logo.png" alt="Kakkerlak"></div>
+    <button class="icon-btn settings" data-open="settings" aria-label="Settings">
+      <img src="assets/settings.png" alt="">
+    </button>
+
+    <!-- points -->
+    <div class="points" id="points" aria-label="Kakkerlak points">105</div>
+    <div class="crop plus5" id="plus5">
+      <img src="assets/plus5.png" alt="" style="width:316.44%;height:337.5%;left:-111.63%;top:-125%">
+    </div>
+
+    <!-- cup room -->
+    <button class="room-btn" id="roomBtn" aria-label="Cup room">
+      <div class="room" id="room">
+        <img class="bg" src="assets/room-bg.png" alt="">
+        <!-- furniture slots are injected here -->
+        <div class="roach" id="roach"><img src="assets/roach.gif" alt="Kakkerlak the cockroach"></div>
+      </div>
+    </button>
+
+    <button class="house" data-open="store" aria-label="Decorate room">
+      <div class="crop" style="inset:0">
+        <img src="assets/house.png" alt="" style="width:376.09%;height:204.2%;left:-148.6%;top:-53.77%">
+      </div>
+    </button>
+
+    <!-- bottom bar -->
+    <nav class="tabbar">
+      <button class="tab" style="left:44px" data-open="refuse">Refuse</button>
+      <button class="tab" style="left:155px" data-open="reuse">Reuse</button>
+      <button class="tab" style="left:256px" data-open="recycle">Recycle</button>
+    </nav>
+
+    <div class="scrim" id="scrim"></div>
+
+    <!-- Refuse -->
+    <section class="popup" id="refuse" aria-label="Refuse">
+      <button class="close" aria-label="Close"><img src="assets/close.svg" alt=""></button>
+      <p class="refuse-copy text-14">Present this QR code to the cashier when using a reusable cup, or bag to get kakkerlak points.</p>
+      <button class="qr" id="qr" aria-label="Simulate cashier scan"><img src="assets/qr.png" alt="Your QR code"></button>
+      <p class="hint">Demo: tap the QR code to simulate a scan (+5)</p>
+    </section>
+
+    <!-- Reuse -->
+    <section class="popup" id="reuse" aria-label="Reuse">
+      <button class="close" aria-label="Close"><img src="assets/close.svg" alt=""></button>
+      <div class="scroll">
+        <div class="feed">
+          <article class="post">
+            <div class="pic"><img src="assets/post1.jpg" alt="Bird feeder made from a painted milk jug"></div>
+            <div class="meta">
+              <img class="avatar" src="assets/avatar1.png" alt="">
+              <p class="author text-14">Home And Flavor</p>
+              <button class="like" aria-label="Like"><img src="assets/heart.svg" alt=""></button>
+              <p class="body text-14">Recycled Crafts for Kids Kids seem to collect an endless pile of empty boxes, paper rolls, bottle caps, and containers without ...</p>
+              <button class="more text-14">see more</button>
+            </div>
+          </article>
+          <article class="post">
+            <div class="pic"><img src="assets/post2.jpg" alt="Bunting made from old fabric"></div>
+            <div class="meta">
+              <img class="avatar" src="assets/avatar2.png" alt="">
+              <p class="author text-14">Dorothee-Maria Lotufo</p>
+              <button class="like" aria-label="Like"><img src="assets/heart.svg" alt=""></button>
+              <p class="body text-14">Mini Mad Things on Instagram: "I was inspired by @madebyhowies awesome upcycling skills and made some bunting from old...</p>
+              <button class="more text-14">see more</button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recycle (not designed yet — placeholder in the same style) -->
+    <section class="popup" id="recycle" aria-label="Recycle">
+      <button class="close" aria-label="Close"><img src="assets/close.svg" alt=""></button>
+      <h2>Recycle</h2>
+      <div class="stack">
+        <p class="text-14">Where does your takeaway go?</p>
+        <div class="card"><div class="swatch" style="background:var(--dark-green)"></div><div><strong>Paper cup</strong><span>Paper &amp; cardboard bin</span></div></div>
+        <div class="card"><div class="swatch" style="background:var(--orange)"></div><div><strong>Plastic lid</strong><span>Plastics &amp; cans bin</span></div></div>
+        <div class="card"><div class="swatch" style="background:var(--lime)"></div><div><strong>Coffee grounds</strong><span>Compost / food waste</span></div></div>
+        <div class="card"><div class="swatch" style="background:var(--brown)"></div><div><strong>Receipts</strong><span>General waste (thermal paper)</span></div></div>
+      </div>
+    </section>
+
+    <!-- Furniture store -->
+    <section class="popup" id="store" aria-label="Furniture">
+      <button class="close" aria-label="Close"><img src="assets/close.svg" alt=""></button>
+      <div class="scroll"><div class="grid" id="grid"></div></div>
+    </section>
+
+    <!-- Settings (guessed) -->
+    <section class="popup" id="settings" aria-label="Settings">
+      <button class="close" aria-label="Close"><img src="assets/close.svg" alt=""></button>
+      <h2>Settings</h2>
+      <div class="stack">
+        <div class="card"><div><strong>Sound</strong><span>Cockroach noises</span></div><button class="toggle on" aria-label="Sound"></button></div>
+        <div class="card"><div><strong>Notifications</strong><span>Point reminders</span></div><button class="toggle on" aria-label="Notifications"></button></div>
+        <div class="card"><div><strong>Location</strong><span>Find partner cafés</span></div><button class="toggle" aria-label="Location"></button></div>
+        <button class="pill-btn" id="reset">Reset demo</button>
+      </div>
+    </section>
+
+    <!-- About (guessed) -->
+    <section class="popup" id="about" aria-label="About">
+      <button class="close" aria-label="Close"><img src="assets/close.svg" alt=""></button>
+      <h2>About</h2>
+      <div class="stack">
+        <img class="about-logo" src="assets/logo.png" alt="Kakkerlak">
+        <p class="text-14">Kakkerlak rewards you for choosing reusables. Show your QR code when you bring your own cup or bag, collect points, and spend them decorating your cockroach's cup.</p>
+        <p class="text-14"><strong>Refuse</strong> single-use. <strong>Reuse</strong> what you have. <strong>Recycle</strong> the rest.</p>
+      </div>
+    </section>
+
+    <!-- Burger menu -->
+    <aside class="drawer" id="drawer" aria-label="Menu">
+      <button class="close" aria-label="Close"><img src="assets/close.svg" alt=""></button>
+      <nav>
+        <button data-open="refuse">Refuse</button>
+        <button data-open="reuse">Reuse</button>
+        <button data-open="recycle">Recycle</button>
+        <button data-open="store">Rewards</button>
+        <button data-open="reuse">Community</button>
+        <button data-open="about">About</button>
+      </nav>
+    </aside>
+
+    <div class="toast" id="toast"></div>
+  </div>
+</div>
+
+<script>
+  // Sprite crops from Figma: every furniture PNG is a full 2048x2732 canvas
+  const CROP = {
+    rug:    { w: 236.42, h: 645.01, l: -68.21,  t: -417.69 },
+    table:  { w: 551.72, h: 523.37, l: -150.59, t: -299.43 },
+    poster: { w: 453.1,  h: 390.29, l: -99.56,  t: -72 },
+    lights: { w: 215.81, h: 352.52, l: -92.62,  t: -33.81 },
+  };
+  // Where each slot sits in the cup room (437px-wide room, from the "Variant2" room)
+  const ROOM_POS = {
+    rug:    { l: 117, t: 375, w: 203, h: 100 },
+    table:  { l: 137, t: 336, w: 75,  h: 106 },
+    poster: { l: 87,  t: 131, w: 106, h: 164 },
+    lights: { l: 157, t: 56,  w: 238, h: 194 },
+  };
+  // Thumbnail placement inside a 138px store tile
+  const TILE_POS = {
+    rug:    { l: 6,  t: 39, w: 126, h: 62 },
+    table:  { l: 31, t: 7,  w: 75,  h: 106 },
+    poster: { l: 35, t: 6,  w: 68,  h: 105 },
+    lights: { l: 10, t: 3,  w: 118, h: 96 },
+  };
+  const SLOT_ORDER = ['rug', 'table', 'poster', 'lights']; // back to front
+
+  const ITEMS = [
+    { id: 'rug-pink',         name: 'Pink Rug',          slot: 'rug',    price: 15 },
+    { id: 'rug-lightgreen',   name: 'Light Green Rug',   slot: 'rug',    price: 15 },
+    { id: 'rug-red',          name: 'Red Rug',           slot: 'rug',    price: 15 },
+    { id: 'rug-darkgreen',    name: 'Dark Green Rug',    slot: 'rug',    price: 15 },
+    { id: 'rug-brown',        name: 'Brown Rug',         slot: 'rug',    price: 15 },
+    { id: 'table-lightgreen', name: 'Light Green Table', slot: 'table',  price: 25 },
+    { id: 'table-pink',       name: 'Pink Table',        slot: 'table',  price: 25 },
+    { id: 'table-red',        name: 'Red Table',         slot: 'table',  price: 25 },
+    { id: 'table-darkgreen',  name: 'Dark Green Table',  slot: 'table',  price: 25 },
+    { id: 'fairy-lights',     name: 'Fairy Lights',      slot: 'lights', price: 30 },
+    { id: 'receipt-poster',   name: 'Receipt Poster',    slot: 'poster', price: 20 },
+  ];
+
+  const DEFAULT_STATE = { points: 105, owned: [], placed: {}, liked: [] };
+  const STORE_KEY = 'kakkerlak-demo';
+  let state = load();
+
+  function load() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORE_KEY));
+      if (saved && typeof saved.points === 'number') return { ...DEFAULT_STATE, ...saved };
+    } catch (e) {}
+    return structuredClone(DEFAULT_STATE);
+  }
+  function save() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {}
+  }
+
+  const $ = (s, root = document) => root.querySelector(s);
+  const $$ = (s, root = document) => [...root.querySelectorAll(s)];
+
+  function cropEl(item, pos, className = '') {
+    const c = CROP[item.slot];
+    const div = document.createElement('div');
+    div.className = 'crop ' + className;
+    Object.assign(div.style, { left: pos.l + 'px', top: pos.t + 'px', width: pos.w + 'px', height: pos.h + 'px' });
+    div.innerHTML = `<img src="assets/${item.id}.png" alt="" style="width:${c.w}%;height:${c.h}%;left:${c.l}%;top:${c.t}%">`;
+    return div;
+  }
+
+  // ---------- rendering ----------
+  function renderPoints() { $('#points').textContent = state.points; }
+
+  function renderRoom(justPlaced) {
+    const room = $('#room');
+    $$('.slot', room).forEach(n => n.remove());
+    const roach = $('#roach');
+    SLOT_ORDER.forEach(slot => {
+      const id = state.placed[slot];
+      if (!id) return;
+      const item = ITEMS.find(i => i.id === id);
+      const el = cropEl(item, ROOM_POS[slot], 'slot' + (justPlaced === id ? ' placed' : ''));
+      room.insertBefore(el, roach);
+    });
+  }
+
+  function renderStore() {
+    const grid = $('#grid');
+    grid.innerHTML = `<p class="store-note">Spend your points to decorate the cup. Tap an item you own to place or remove it.</p>`;
+    ITEMS.forEach(item => {
+      const owned = state.owned.includes(item.id);
+      const selected = state.placed[item.slot] === item.id;
+      const tile = document.createElement('button');
+      tile.className = 'tile' + (selected ? ' selected' : '');
+      tile.setAttribute('aria-pressed', selected);
+      tile.appendChild(cropEl(item, TILE_POS[item.slot]));
+      tile.insertAdjacentHTML('beforeend',
+        `<span class="price ${owned ? 'owned' : ''}">${owned ? (selected ? 'placed' : 'owned') : item.price}</span>
+         <span class="label">${item.name}</span>`);
+      tile.addEventListener('click', () => onTile(item, tile));
+      grid.appendChild(tile);
+    });
+  }
+
+  function onTile(item, tile) {
+    const owned = state.owned.includes(item.id);
+    if (!owned) {
+      if (state.points < item.price) {
+        tile.classList.remove('shake'); void tile.offsetWidth; tile.classList.add('shake');
+        toast(`You need ${item.price - state.points} more points`);
+        return;
+      }
+      state.points -= item.price;
+      state.owned.push(item.id);
+      state.placed[item.slot] = item.id;
+      toast(`${item.name} bought!`);
+    } else if (state.placed[item.slot] === item.id) {
+      delete state.placed[item.slot];
+    } else {
+      state.placed[item.slot] = item.id;
+    }
+    save(); renderPoints(); renderStore();
+    renderRoom(state.placed[item.slot]);
+  }
+
+  function renderLikes() {
+    $$('#reuse .like').forEach((btn, i) => {
+      const on = state.liked.includes(i);
+      $('img', btn).src = on ? 'assets/heart-filled.svg' : 'assets/heart.svg';
+      btn.setAttribute('aria-pressed', on);
+    });
+  }
+
+  // ---------- overlays ----------
+  let current = null;
+  function open(id) {
+    if (current) close(true);
+    current = $('#' + id);
+    current.classList.add('open');
+    $('#scrim').classList.add('open');
+  }
+  function close(keepScrim) {
+    if (!current) return;
+    current.classList.remove('open');
+    current = null;
+    if (!keepScrim) $('#scrim').classList.remove('open');
+  }
+  $$('[data-open]').forEach(b => b.addEventListener('click', () => open(b.dataset.open)));
+  $$('.close').forEach(b => b.addEventListener('click', () => close()));
+  $('#scrim').addEventListener('click', () => close());
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+
+  // ---------- interactions ----------
+  function addPoints(n) {
+    state.points += n; save(); renderPoints();
+    const p = $('#points'); p.classList.remove('bump'); void p.offsetWidth; p.classList.add('bump');
+    const f = $('#plus5'); f.classList.remove('show'); void f.offsetWidth; f.classList.add('show');
+  }
+
+  $('#qr').addEventListener('click', () => {
+    const qr = $('#qr'); qr.classList.remove('scanned'); void qr.offsetWidth; qr.classList.add('scanned');
+    close();
+    setTimeout(() => { addPoints(5); toast('Reusable cup scanned! +5 points'); }, 250);
+  });
+
+  $('#roomBtn').addEventListener('click', () => {
+    const r = $('#roach'); r.classList.remove('wiggle'); void r.offsetWidth; r.classList.add('wiggle');
+  });
+
+  $$('#reuse .like').forEach((btn, i) => btn.addEventListener('click', () => {
+    state.liked = state.liked.includes(i) ? state.liked.filter(x => x !== i) : [...state.liked, i];
+    save(); renderLikes();
+    btn.classList.remove('pop'); void btn.offsetWidth; btn.classList.add('pop');
+  }));
+  $$('#reuse .more').forEach(b => b.addEventListener('click', () => toast('Opens the full post')));
+
+  $$('.toggle').forEach(t => t.addEventListener('click', () => t.classList.toggle('on')));
+  $('#reset').addEventListener('click', () => {
+    state = structuredClone(DEFAULT_STATE); save();
+    renderPoints(); renderRoom(); renderStore(); renderLikes(); close();
+    toast('Demo reset');
+  });
+
+  let toastTimer;
+  function toast(msg) {
+    const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 1800);
+  }
+
+  // ---------- fit the 402x874 phone to the viewport ----------
+  function fit() {
+    const small = innerWidth < 500;
+    document.body.classList.toggle('fullscreen', small);
+    const pad = small ? 0 : 48;
+    const s = Math.min((innerWidth - pad) / 402, (innerHeight - pad) / 874, small ? 10 : 1);
+    $('#stage').style.transform = `scale(${s})`;
+  }
+  addEventListener('resize', fit);
+
+  fit(); renderPoints(); renderRoom(); renderStore(); renderLikes();
+</script>
+</body>
+</html>
