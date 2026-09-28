@@ -43,25 +43,34 @@
   .crop { position: absolute; overflow: hidden; pointer-events: none; }
   .crop > img { position: absolute; max-width: none; }
 
-  /* ---------- header (guessed placement) ---------- */
-  .icon-btn { position: absolute; display: grid; place-items: center; }
-  .burger { left: 20px; top: 52px; width: 44px; height: 44px; }
-  .logo { position: absolute; left: 50%; top: 38px; width: 112px; height: 65px; transform: translateX(-50%); }
-  .logo img { width: 100%; height: 100.54%; margin-top: -0.27%; display: block; }
-  .settings { right: 18px; top: 46px; width: 44px; height: 52px; }
-  .settings img { width: 36px; height: 48px; object-fit: cover; }
+  /* ---------- header ---------- */
+  .burger { position: absolute; left: 41px; top: 97px; width: 41px; height: 31px; }
+  .burger span { position: absolute; left: 0; width: 41px; height: 6px; border-radius: 4px; background: var(--brown); }
+  .burger:active { opacity: .7; }
+  .settings { position: absolute; left: 319px; top: 93px; width: 42px; height: 43px; }
+  .settings:active { transform: rotate(30deg); }
+
+  /* star badge (ellipse + star) */
+  .badge-circle { position: absolute; left: 129px; top: 77px; width: 72px; height: 72px; pointer-events: none; }
+  .star { position: absolute; width: 70px; height: 70px; pointer-events: none; }
+  .star img { position: absolute; left: 14.31%; top: 12.78%; display: block; }
+  .star-top { left: 129px; top: 78px; }
+  .star-bottom { left: 31px; top: 655px; }
 
   /* ---------- points pill ---------- */
-  .points {
-    position: absolute; left: 46px; top: 116px; width: 129px; height: 41px;
+  .points-pill {
+    position: absolute; left: 143px; top: 92px; width: 129px; height: 41px;
     background: var(--cream); border: 2px solid var(--brown); border-radius: 10px;
-    display: flex; align-items: center; justify-content: flex-end; padding-right: 22px;
-    font-family: 'Patrick Hand', cursive; font-size: 24px; line-height: 1; letter-spacing: 1px;
+  }
+  .points {
+    position: absolute; left: 199px; top: 103px; width: 47px; height: 19px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Patrick Hand', cursive; font-size: 20px; line-height: 1; letter-spacing: 2px;
   }
   .points.bump { animation: bump .45s ease; }
   @keyframes bump { 40% { transform: scale(1.12); } }
   .plus5 {
-    position: absolute; left: 148px; top: 150px; width: 44px; height: 24px;
+    position: absolute; left: 238px; top: 128px; width: 44px; height: 24px;
     opacity: 0; pointer-events: none;
   }
   .plus5.show { animation: floatUp 1.2s ease forwards; }
@@ -73,17 +82,17 @@
   }
 
   /* ---------- cup room ---------- */
-  .room-btn { position: absolute; left: -15px; top: 167px; width: 431px; height: 539px; }
-  .room {
-    position: absolute; left: 0; top: 0; width: 437px; height: 583px;
-    transform: scale(calc(431 / 437)); transform-origin: top left;
-  }
-  .room .bg { position: absolute; left: 0; top: 0; width: 100%; aspect-ratio: 2048 / 2732; object-fit: cover; pointer-events: none; }
+  /* "Buggo": 360x465 clip; the cup art is a full 2048x2732 canvas placed at
+     (-15.32%, -12.09%) of a 359x465 box, i.e. a 469px-wide canvas at (-55, -56.2) */
+  .room-btn { position: absolute; left: 21px; top: 190px; width: 360px; height: 465px; overflow: hidden; }
+  .room { position: absolute; left: -55px; top: -56.2px; width: 469px; height: 625.3px; }
+  .room .bg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; }
+  /* roach: 178x291 box at (142,108) in Buggo, canvas-sized image at (-17.7%, -4.35%) */
   .room .roach {
-    position: absolute; left: 40.5%; right: 11.67%; top: 204px; aspect-ratio: 2048 / 2732;
+    position: absolute; left: 165.5px; top: 151.5px; width: 264.6px; height: 352.5px;
     pointer-events: none; transform-origin: 50% 80%;
   }
-  .room .roach img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .room .roach img { width: 100%; height: 100%; display: block; }
   .room .roach.wiggle { animation: wiggle .6s ease; }
   @keyframes wiggle { 20% { transform: rotate(-6deg); } 50% { transform: rotate(5deg); } 80% { transform: rotate(-2deg); } }
   .room .slot { transition: opacity .25s; }
@@ -91,16 +100,16 @@
   @keyframes drop { from { opacity: 0; transform: translateY(-10px); } }
 
   /* house (decorate / store) */
-  .house { position: absolute; left: 305px; top: 637px; width: 56px; height: 60px; }
+  .house { position: absolute; left: 306px; top: 655px; width: 56px; height: 60px; }
   .house:active { transform: scale(.94); }
 
   /* ---------- bottom bar ---------- */
   .tabbar {
-    position: absolute; left: 0; top: 746px; width: 402px; height: 128px;
-    background: var(--orange); border: 2px solid var(--brown);
+    position: absolute; left: 0; top: 745px; width: 402px; height: 166px;
+    background: var(--orange); border: 2px solid var(--brown); border-radius: 29px;
   }
   .tab {
-    position: absolute; top: 12px; padding: 10px;
+    position: absolute; top: 13px; padding: 10px;
     font-weight: 700; font-size: 24px; color: var(--cream); white-space: nowrap;
   }
   .tab:active { transform: translateY(1px); opacity: .85; }
@@ -190,15 +199,16 @@
   .about-logo { width: 180px; align-self: center; }
 
   /* burger drawer */
+  /* 152px visible; the 188x937 panel starts at x=-36 so only its top-right corner rounds on screen */
   .drawer {
-    position: absolute; left: 0; top: 0; width: 247px; height: 100%; z-index: 20;
-    background: var(--cream); border: 2px solid var(--brown); border-left: 0; border-radius: 0 10px 10px 0;
-    transform: translateX(-105%); transition: transform .25s ease;
+    position: absolute; left: -36px; top: 0; width: 188px; height: 937px; z-index: 20;
+    background: var(--cream); border: 2px solid var(--brown); border-radius: 29px;
+    transform: translateX(-110%); transition: transform .25s ease;
   }
   .drawer.open { transform: none; }
-  .drawer .close { left: 10px; top: 42px; }
-  .drawer nav { position: absolute; left: 16px; top: 140px; display: flex; flex-direction: column; gap: 17px; }
-  .drawer nav button { text-align: left; font-weight: 700; font-size: 24px; line-height: 30px; }
+  .drawer .close { left: 129px; top: 87px; }
+  .drawer nav { position: absolute; left: 34px; top: 171px; display: flex; flex-direction: column; gap: 3px; }
+  .drawer nav button { text-align: left; font-weight: 700; font-size: 20px; line-height: 24px; padding: 10px; }
   .drawer nav button:active { color: var(--orange); }
 
   .toast {
@@ -214,20 +224,20 @@
   <div class="phone" id="phone">
 
     <!-- header -->
-    <button class="icon-btn burger" data-open="drawer" aria-label="Menu">
-      <svg width="30" height="24" viewBox="0 0 30 24" fill="none" aria-hidden="true">
-        <rect y="1" width="30" height="4" rx="2" fill="#442b19"/>
-        <rect y="10" width="30" height="4" rx="2" fill="#442b19"/>
-        <rect y="19" width="30" height="4" rx="2" fill="#442b19"/>
-      </svg>
+    <button class="burger" data-open="drawer" aria-label="Menu">
+      <span style="top:0"></span><span style="top:13px"></span><span style="top:25px"></span>
     </button>
-    <div class="logo" aria-label="Kakkerlak"><img src="assets/logo.png" alt="Kakkerlak"></div>
-    <button class="icon-btn settings" data-open="settings" aria-label="Settings">
-      <img src="assets/settings.png" alt="">
+    <button class="settings" data-open="settings" aria-label="Settings">
+      <div class="crop" style="inset:0">
+        <img src="assets/settings.png" alt="" style="width:130.77%;height:170.08%;left:-15.38%;top:-27.54%">
+      </div>
     </button>
 
     <!-- points -->
+    <div class="points-pill"></div>
     <div class="points" id="points" aria-label="Kakkerlak points">105</div>
+    <img class="badge-circle" src="assets/star-circle.svg" alt="">
+    <div class="star star-top"><img src="assets/star.svg" alt=""></div>
     <div class="crop plus5" id="plus5">
       <img src="assets/plus5.png" alt="" style="width:316.44%;height:337.5%;left:-111.63%;top:-125%">
     </div>
@@ -235,11 +245,13 @@
     <!-- cup room -->
     <button class="room-btn" id="roomBtn" aria-label="Cup room">
       <div class="room" id="room">
-        <img class="bg" src="assets/room-bg.png" alt="">
+        <img class="bg" src="assets/cup.png" alt="">
         <!-- furniture slots are injected here -->
         <div class="roach" id="roach"><img src="assets/roach.gif" alt="Kakkerlak the cockroach"></div>
       </div>
     </button>
+
+    <div class="star star-bottom"><img src="assets/star-green.svg" alt=""></div>
 
     <button class="house" data-open="store" aria-label="Decorate room">
       <div class="crop" style="inset:0">
@@ -360,13 +372,14 @@
     poster: { w: 453.1,  h: 390.29, l: -99.56,  t: -72 },
     lights: { w: 215.81, h: 352.52, l: -92.62,  t: -33.81 },
   };
-  // Where each slot sits in the cup room (437px-wide room, from the "Variant2" room)
-  const ROOM_POS = {
+  // Where each slot sits on the cup canvas (originally measured on a 437px canvas; now 469px)
+  const K = 469 / 437;
+  const ROOM_POS = Object.fromEntries(Object.entries({
     rug:    { l: 117, t: 375, w: 203, h: 100 },
     table:  { l: 137, t: 336, w: 75,  h: 106 },
     poster: { l: 87,  t: 131, w: 106, h: 164 },
     lights: { l: 157, t: 56,  w: 238, h: 194 },
-  };
+  }).map(([k, p]) => [k, { l: p.l * K, t: p.t * K, w: p.w * K, h: p.h * K }]));
   // Thumbnail placement inside a 138px store tile
   const TILE_POS = {
     rug:    { l: 6,  t: 39, w: 126, h: 62 },
